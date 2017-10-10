@@ -10,5 +10,5 @@ run this module
 Tips
 ====
 1 java8  
-2 rest api path:  
-localhost:8790/tradeshift-ups/rest/external/ups/
+2 first rest api:  
+localhost:8790/tradeshift-ups/rest/external/ups/test
