@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:mbean-server id="mbeanServer" />
+
+    <bean id="rmiRegistry" class="org.springframework.remoting.rmi.RmiRegistryFactoryBean">
+        <property name="port" value="${jmx.rmiport}" />
+    </bean>
+    
+    <bean id="mbeanServerConnector" class="org.springframework.jmx.support.ConnectorServerFactoryBean" depends-on="rmiRegistry">
+        <property name="objectName" value="connector:name=rmidocumentlines" />
+        <property name="server" ref="mbeanServer" />
+        <property name="serviceUrl" value="service:jmx:rmi://${jmx.ip}:${jmx.port}/jndi/rmi://localhost:${jmx.rmiport}/documentlines" />
+    </bean>
+	
+	<bean class="org.springframework.jmx.export.annotation.AnnotationMBeanExporter">
+		<property name="server" ref="mbeanServer" />
+		<property name="defaultDomain" value="tradeshift-documentlines-service" />
+		<property name="ensureUniqueRuntimeObjectNames" value="false" />
+	</bean>
+</beans>

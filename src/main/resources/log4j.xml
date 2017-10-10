@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="com.tradeshift.commons.logging.ExceptionTrimmingPatternLayout">
+            <param name="ConversionPattern" value="%d [%-2p] {%t} %c - %m%n"/>
+            <param name="Excludes" value="org.springframework.aop, sun.reflect.GeneratedMethodAccessor, sun.reflect.NativeMethodAccessorImpl, net.sf.cglib.proxy.MethodProxy, sun.reflect.DelegatingMethodAccessorImpl, java.lang.reflect.Method.invoke" />
+        </layout>
+    </appender>
+
+    <appender name="console_async" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="console"/>
+    </appender>
+
+
+    <appender name="console_trans" class="com.tradeshift.commons.logging.RequestIDAppender">
+        <appender-ref ref="console_async"/>
+    </appender>
+
+    <category name="com.tradeshift">
+        <priority value="debug"/>
+    </category>
+
+    <category name="com.tradeshift.security">
+        <priority value="warn" />
+    </category>
+
+    <category name="com.tradeshift.documentation.DocumentationUtil">
+        <priority value="warn" />
+    </category>
+
+    <category name="com.tradeshift.commons.logging">
+        <priority value="warn" />
+    </category>
+
+    <category name="com.tradeshift.logging">
+        <priority value="info" />
+    </category>
+
+    <category name="com.tradeshift.commons.auditlog">
+        <priority value="info" />
+    </category>
+
+    <category name="com.tradeshift.commons.dao">
+        <priority value="warn"/>
+    </category>
+
+    <category name="com.tradeshift.commons.configuration">
+        <priority value="warn" />
+    </category>
+
+    <category name="org.springframework">
+        <priority value="warn"/>
+    </category>
+
+    <category name="org.springframework.jdbc">
+        <priority value="warn"/>
+    </category>
+
+    <category name="com.carbonfive">
+        <priority value="info" />
+    </category>
+
+    <root>
+        <priority value ="warn" />
+        <appender-ref ref="console_trans"/>
+    </root>
+
+</log4j:configuration>

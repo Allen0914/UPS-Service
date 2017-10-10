@@ -1,0 +1,11 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+    <New id="config.location" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+        <Arg></Arg>
+        <Arg>config.location</Arg>
+        <Arg>file:/etc/tradeshift/ups-service/config.properties</Arg>
+        <Arg type="boolean">true</Arg>
+    </New>
+    <Set name="war"><SystemProperty name="jetty.home" default="."/>/webapps/webapp.war</Set>
+</Configure>

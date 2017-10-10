@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:jms="http://www.springframework.org/schema/jms"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+	<context:component-scan base-package="com.tradeshift.commons.auditlog" />
+	<context:component-scan base-package="com.tradeshift.commons.logging" />
+	<context:component-scan base-package="com.tradeshift.commons.timing" />
+	<context:component-scan base-package="com.tradeshift.commons.configuration" />
+	<context:component-scan base-package="com.tradeshift.commons.rest"/>
+	<context:component-scan base-package="com.tradeshift.commons.net"/>
+	<context:component-scan base-package="com.tradeshift.commons.documentation"/>
+	<context:component-scan base-package="com.tradeshift.commons.exception"/>
+	<context:component-scan base-package="com.tradeshift.status"/>
+
+
+	<bean class="com.tradeshift.commons.config.DefaultAuditLogConfig"/>
+	<bean class="com.tradeshift.commons.config.DefaultJerseyConfig"/>
+
+	<tx:annotation-driven order="0" transaction-manager="transactionManager" />
+
+	<aop:aspectj-autoproxy>
+		<aop:include name="timerAspect" />
+		<aop:include name="securityAspect"/>
+		<aop:include name="statusMonitor" />
+		<aop:include name="auditableAspect"/>
+		<aop:include name="auditedAspect"/>
+		<aop:include name="requiresThreadScope" />
+		<aop:include name="securityChecker" />
+	</aop:aspectj-autoproxy>
+
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="threadlocal">
+					<bean class="com.tradeshift.util.spring.ThreadScope" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="restTemplate" class="com.tradeshift.commons.http.TradeshiftRestTemplate" primary="true">
+		<property name="soTimeout" value="300000"/>
+	</bean>
+
+	<bean id="hostProviders" class="com.tradeshift.commons.net.HostProviders">
+		<constructor-arg>
+			<array>
+				<bean id="conversionsHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="conversions"/>
+				</bean>
+				<bean id="appsHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="apps"/>
+				</bean>
+				<bean id="workflowHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="workflow"/>
+				</bean>
+				<bean id="frontendHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="frontend"/>
+				</bean>
+				<bean id="auditServerHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="auditserver"/>
+				</bean>
+				<bean id="backendHostProvider" class="com.tradeshift.commons.net.ConfigurationBackedHostProvider">
+					<constructor-arg ref="configurationLoader"/>
+					<constructor-arg value="backend"/>
+				</bean>
+			</array>
+		</constructor-arg>
+	</bean>
+
+	<bean id="jaxbSupport" class="com.tradeshift.commons.jaxb.JaxbSupport">
+		<property name="basePackages">
+			<array>
+				<value>com.tradeshift</value>
+			</array>
+		</property>
+	</bean>
+</beans>

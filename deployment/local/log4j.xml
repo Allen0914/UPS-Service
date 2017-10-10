@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!--
+     Local log4j logging configuration.
+
+     Note that this file will not be read by the system, unless it's location
+     is properly indicated in JNDI through jetty-env.xml.
+  -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="com.tradeshift.commons.logging.ExceptionTrimmingPatternLayout">
+            <param name="EscapedConversionPattern" value="€[1;37m%d€[m [%-5p] {%10.10t} €[1;33m%.30c€[m - %m%n"/>
+            <param name="Excludes" value="org.springframework.aop, sun.reflect.GeneratedMethodAccessor, sun.reflect.NativeMethodAccessorImpl" />
+        </layout>
+    </appender>
+
+    <appender name="file" class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="target/backend.log"/>
+        <param name="MaxFileSize" value="10000KB"/>
+        <param name="Encoding" value="UTF-8"/>
+        <!-- Keep one backup file -->
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="com.tradeshift.commons.logging.ExceptionTrimmingPatternLayout">
+            <param name="ConversionPattern" value="%d [%-5p] {%10.10t} %.30c - %m%n"/>
+            <param name="Excludes" value="org.springframework.aop, sun.reflect.GeneratedMethodAccessor, sun.reflect.NativeMethodAccessorImpl" />
+        </layout>
+
+    </appender>
+    <appender name="console_async" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="console"/>
+    </appender>
+
+
+    <appender name="console_trans" class="com.tradeshift.logging.RequestIDAppender">
+        <appender-ref ref="console_async"/>
+    </appender>
+
+    <category name="com.tradeshift">
+        <priority value="debug"/>
+    </category>
+
+    <category name="com.tradeshift.commons.auditlog.AuditInformation">
+        <priority value="warn"/>
+    </category>
+
+    <category name="com.tradeshift.logging.headers">
+        <priority value="debug" />
+    </category>
+
+    <category name="com.tradeshift.dispatch.MessageResender">
+        <priority value="info" />
+    </category>
+
+    <category name="com.tradeshift.email">
+        <priority value="info" />
+    </category>
+
+    <category name="com.tradeshift.documents.search">
+        <priority value="info" />
+    </category>
+
+    <category name="org.apache.jcs">
+        <priority value="warn"/>
+    </category>
+
+    <category name="org.springframework">
+        <priority value="warn"/>
+    </category>
+
+    <category name="org.apache">
+        <priority value="warn"/>
+    </category>
+
+    <category name="org.apache.log4j">
+        <priority value="debug"/>
+    </category>
+
+    <category name="org.apache.http.wire">
+        <priority value="info"/>
+    </category>
+
+    <category name="com.tradeshift.dispatch">
+        <priority value="info"/>
+    </category>
+
+    <!--
+      <category name="org.springframework.jdbc.core.StatementCreatorUtils">
+        <priority value="trace"/>
+      </category>
+      <category name="org.springframework.jdbc.core.JdbcTemplate">
+        <priority value="debug"/>
+      </category>
+       -->
+    <category name="org.springframework.ws.client.MessageTracing.sent">
+        <priority value="error"/>
+    </category>
+
+    <category name="org.springframework.ws.client.MessageTracing.received">
+        <priority value="error"/>
+    </category>
+
+    <category name="org.apache.activemq">
+        <priority value="warn" />
+    </category>
+
+    <category name="org.springframework.jdbc">
+        <priority value="info"/>
+    </category>
+
+    <category name="org.springframework.jms">
+        <priority value="warn"/>
+    </category>
+
+    <category name="org.apache.axis2">
+        <priority value="warn" />
+    </category>
+
+    <category name="dk.gov.oiosi">
+        <priority value="warn" />
+    </category>
+    <category name="org.wso2">
+        <priority value="warn" />
+    </category>
+
+    <root>
+        <priority value ="debug" />
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+
+</log4j:configuration>
