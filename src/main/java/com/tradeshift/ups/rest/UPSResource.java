@@ -1,4 +1,4 @@
-package com.tradeshift.rest;
+package com.tradeshift.ups.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
